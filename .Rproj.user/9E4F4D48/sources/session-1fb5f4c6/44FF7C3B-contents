@@ -1,7 +1,7 @@
 ---
 title: "Propensity Score Matching"
-#institute: "Propensity Score Matching"
-date: "`r format(Sys.time(), '%d/%m/%Y')`"
+institute: "Luan Magalhães"
+#date: "`r format(Sys.time(), '%d/%m/%Y')`"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -33,15 +33,17 @@ xaringanExtra::use_logo("logo.png")
 
 # Introdução
 
-Neste trabalho, vamos analisar o efeito de frequentar uma escola católica, em comparação com alunos de escola pública, no desempenho dos alunos.
+Neste trabalho, analisaremos o efeito de frequentar uma escola católica, em comparação com escolas não católicas, no desempenho dos alunos.
 
-Como os estudantes que frequentam escolas católicas, em média, são diferentes dos que frequentam escolas públicas, utilizaremos o pareamento por escore de propensão para obter estimativas causais mais credíveis sobre o efeito das escolas católicas.
+Como os estudantes de escolas católicas geralmente têm perfis diferentes dos de escolas não católicas, utilizaremos o pareamento por escore de propensão para obter estimativas causais mais confiáveis.
 
 --
 
-A pergunta que surge é: a diferença no desempenho dos alunos ocorre devido às escolas onde estudam, ou porque suas trajetórias de vida os colocam em situações de desigualdade?
+- **A pergunta que surge é**: a diferença no desempenho é causada pelas escolas ou pelas trajetórias de vida dos alunos, que os colocam em situações de desigualdade?
 
-Em outras palavras, é a escola que produz a desigualdade ou é a história de vida dos alunos que gera essa disparidade?
+--
+
+- Em outras palavras, a escola é a responsável pela desigualdade ou é a história de vida dos alunos que gera essa disparidade?
 
 ---
 
@@ -92,7 +94,7 @@ ecls <- ecls %>%
   select('catholic', 'c5r2mtsc_std', 'p5hmage',
          'race_white','w3income_1k', 'p5numpla', 'w3momed_hsb')
 
-# Exibe as duas primeiras linhas do dataframe em formato de tabela usando kable
+# Exibe as duas primeiras linhas do dataframe em formato de tabela
 ecls %>% head(2) %>% kable()
 
 ```
@@ -124,9 +126,7 @@ ecls %>%
 
 - A **média** das notas padronizadas de matemática é **maior** para alunos de **escolas católicas** (0.2197) do que para alunos de escolas não católicas (0.1631).
 
-- A diferença de médias (0.2197 - 0.1631 = 0.0566) sugere que, em média, alunos de escolas católicas apresentam um desempenho levemente superior em matemática, mas seria necessário realizar um teste estatístico (como um teste t) para verificar se essa diferença é estatisticamente significativa ou se pode ter ocorrido por acaso.
-
-- Essa análise preliminar indica uma tendência de melhor desempenho médio em escolas católicas, porém a significância dessa diferença ainda precisa ser verificada.
+- A diferença de médias (0.2197 - 0.1631 = 0.0566) sugere que, em média, alunos de escolas católicas apresentam um desempenho levemente superior em matemática; no entanto, a significância dessa diferença ainda precisa ser verificada.
 
 ---
 
@@ -147,7 +147,7 @@ ecls %>%
 
 <br>
 
-**race_white**: **A proporção de alunos brancos é maior em escolas católicas** (76.67%) do que em não católicas (65.37%). Isso sugere uma maior concentração de alunos brancos em escolas católicas, o que pode estar relacionado com fatores históricos, sociais ou econômicos.  
+- *race_white*: **A proporção de alunos brancos é maior em escolas católicas** (76.67%) do que em não católicas (65.37%). Isso sugere uma maior concentração de alunos brancos em escolas católicas, o que pode estar relacionado com fatores históricos, sociais ou econômicos.  
 
 ---
 
@@ -155,13 +155,13 @@ ecls %>%
 
 ### Média das variáveis
 
-**p5hmage (Idade da mãe)**: A média da **idade das mães em escolas católicas** (39.78 anos) **é** ligeiramente **superior à das mães em escolas não católicas** (37.79 anos). Isso pode refletir um perfil socioeconômico mais elevado ou diferenças nos padrões familiares de planejamento em famílias de alunos que frequentam escolas católicas.
+- *p5hmage (Idade da mãe)*: A média da **idade das mães em escolas católicas** (39.78 anos) **é** ligeiramente **superior à das mães em escolas não católicas** (37.79 anos). Isso pode refletir um perfil socioeconômico mais elevado ou diferenças nos padrões familiares de planejamento em famílias de alunos que frequentam escolas católicas.
 
-**w3income_1k (Renda familiar em milhares)**: A **renda familiar** média é significativamente **maior entre alunos de escolas católicas** (86.180,63 /1000) em comparação com alunos de escolas não católicas (65.393,93 /1000). Esse é um dos fatores que podem influenciar o desempenho acadêmico, já que famílias com maior renda têm mais recursos para investir na educação e no desenvolvimento dos filhos.
+- *w3income_1k (Renda familiar em milhares)*: A **renda familiar** média é significativamente **maior entre alunos de escolas católicas** (86.180,63 /1000) em comparação com alunos de escolas não católicas (65.393,93 /1000). Esse é um dos fatores que podem influenciar o desempenho acadêmico, já que famílias com maior renda têm mais recursos para investir na educação e no desenvolvimento dos filhos.
 
-**p5numpla (Número de lugares onde o aluno viveu)**: Em média, os alunos de escolas não católicas (1.1062) tendem a ter vivido em um número ligeiramente maior de lugares do que os alunos de escolas católicas (1.0731). A diferença é pequena, mas pode sugerir uma leve maior estabilidade residencial em alunos de escolas católicas.
+- *p5numpla (Número de lugares onde o aluno viveu)*: Em média, os alunos de escolas não católicas (1.1062) tendem a ter vivido em um número ligeiramente maior de lugares do que os alunos de escolas católicas (1.0731). A diferença é pequena, mas pode sugerir uma leve maior estabilidade residencial em alunos de escolas católicas.
 
-**w3momed_hsb (Escolaridade da mãe até ensino médio)**: A proporção de mães com até ensino médio é maior em escolas não católicas (39.23%) do que em escolas católicas (20.54%). Isso sugere que, em média, as mães de alunos de escolas católicas têm níveis de escolaridade mais altos. Esse fator pode estar relacionado a uma maior conscientização sobre a importância da educação ou a melhores condições econômicas, o que também influencia o desempenho acadêmico dos alunos.
+- *w3momed_hsb (Escolaridade da mãe até ensino médio)*: A proporção de mães com até ensino médio é maior em escolas não católicas (39.23%) do que em escolas católicas (20.54%). Isso sugere que, em média, as mães de alunos de escolas católicas têm níveis de escolaridade mais altos. Esse fator pode estar relacionado a uma maior conscientização sobre a importância da educação ou a melhores condições econômicas, o que também influencia o desempenho acadêmico dos alunos.
 
 ---
 
@@ -203,9 +203,9 @@ with(ecls, t.test(c5r2mtsc_std ~ catholic))
 
 <br>
 
-- A diferença nas notas de matemática entre alunos de escolas católicas (0,22) e não católicas (0,16) é pequena, e o teste t rejeita a hipótese de médias iguais apenas ao nível de significância de 10%, mas não ao de 5%.
+- **A diferença nas notas de matemática** entre alunos de escolas católicas (0,22) e não católicas (0,16) é pequena, e o teste t rejeita a hipótese de médias iguais apenas ao nível de significância de 10%, mas não ao de 5%.
 
-- Isso sugere que a diferença não é estatisticamente significativa em um nível mais rigoroso, o que impede de afirmar com certeza que estudar em escola católica melhora o desempenho em matemática, já que a correlação pode ser casual mesmo considerando outros fatores.
+- Isso sugere que a diferença **não é estatisticamente significativa** em um nível mais rigoroso, o que impede de afirmar com certeza que estudar em escola católica melhora o desempenho em matemática, já que a correlação pode ser casual mesmo considerando outros fatores.
 
 ---
 
@@ -291,7 +291,7 @@ with(ecls, t.test(w3momed_hsb ~ catholic)) # Escolaridade da mae
 
 ## O que isso significa? 
 
-Significa que simplesmente comparar a média de notas de alunos de escolas católicas com alunos de escolas não católicas não é uma abordagem adequada, pois o contexto e o background desses alunos são diferentes.
+Significa que simplesmente comparar a média de notas de alunos de escolas católicas com alunos de escolas não católicas não é uma abordagem adequada, pois **o contexto e o background desses alunos são diferentes**.
 
 Para abordar essa questão, utilizaremos a estimativa de *propensity score*. Essa técnica nos permitirá criar um contrafactual, buscando entre todos os alunos que não frequentam escolas católicas aqueles que mais se assemelham ao perfil dos alunos de escolas católicas. Dessa forma, poderemos realizar comparações mais justas e precisas.
 
@@ -361,7 +361,7 @@ A área de comum suporte é a faixa de valores dos *propensity scores* onde há 
 
 ecls$pr_score<-predict(m_ps,type = "response") 
 
-labs <- paste("Escola em que cursou ensino médio:",c("Católica","Pública"))
+labs <- paste("Escola em que cursou ensino médio:",c("Católica","Não católica"))
 
 ecls %>%
   mutate(catholic = ifelse(catholic == 1,labs[1],labs[2])) %>% 
@@ -436,7 +436,10 @@ kable()
 
 #### Teste t
 
-Quando realizamos o teste t comparando as variáveis, todas apresentaram um p-valor menor que 0,05. Agora, após o pareamento, não rejeitamos a hipótese nula; ou seja, podemos afirmar que, em relação a essas variáveis, o grupo de controle é igual ao grupo de tratamento, ou seja, são estatisticamente iguais.
+- No início, ao realizar o teste t comparando as variáveis, todas apresentaram p-valor menor que 0,05.
+
+- Após o pareamento, no entanto, não rejeitamos a hipótese nula, o que significa que, em relação a essas variáveis, o grupo de controle e o de tratamento são estatisticamente iguais.
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -482,9 +485,9 @@ kable()
 
 ---
 
-### Efeitos do tratamento - Teste t
+### Efeitos do tratamento
 
-Com os dados pareados, é simples calcular os efeitos do tratamento. Uma opção é usar o teste t.
+Com os dados pareados, é simples calcular os efeitos do tratamento. Uma opção é usar o **teste t**.
 
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
@@ -492,13 +495,17 @@ Com os dados pareados, é simples calcular os efeitos do tratamento. Uma opção
 with(dta_m, t.test(c5r2mtsc_std ~ catholic))
 
 ```
-<br>
+
+- Os resultados mostram uma **diferença significativa** nas notas de matemática entre **alunos católicos e não católicos**, com um *p-valor* muito pequeno (0.000009417).
+
+- Em média, os alunos não católicos têm notas significativamente maiores do que os alunos católicos.
+
 
 ---
 
-### Efeitos do tratamento -  Regressão linear
+### Efeitos do tratamento
 
-Ou usar regressão linear:
+Uma outra maneira de analisar é usar uma regressão linear da variável de interesse, que é a média de matemática, em relação ao tipo de escola:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -521,12 +528,15 @@ kable(summary_lm1, row.names = FALSE)
 
 ```
 
+<br>
+
+* Em média, ser aluno de uma escola católica está associado a uma redução de 0.18387 nas notas de matemática, em comparação com alunos de escolas não católicas. O sinal negativo mostra que, após ajustar para a variável, os alunos de escolas católicas tendem a ter desempenho inferior.
 
 ---
 
-### Efeitos do tratamento -  Regressão linear
+### Efeitos do tratamento
 
-Ou usar regressão linear:
+Para sofisticar um pouco mais o modelo, além de incluir apenas a variável católica, podemos controlar pelas demais variáveis para verificar se obtemos estimativas mais eficientes:
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -550,34 +560,37 @@ kable(summary_lm2, row.names = FALSE)
 
 ```
  
+- **O resultado se mantém**: alunos de escolas católicas têm desempenho em matemática pior do que alunos de escolas não católicas quando usamos uma estrutura de pareamento.
+
 ---
 
-### Efeitos do tratamento 
+### Efeitos do tratamento
+
 
 Mesmo controlando todos os atributos de trajetórias que parecem relevantes, ainda assim **encontramos médias de desempenho em matemática diferentes**.
 
-Esse resultado indica que a escola tem uma diferença em relação aos alunos; mesmo alunos com backgrounds iguais obtêm resultados diferentes.
- 
- 
+Esse resultado indica que **a escola tem uma diferença em relação aos alunos**; mesmo alunos com backgrounds iguais obtêm resultados diferentes.
  
 ---
 
-https://mbounthavong.com/blog/2022/7/30/hosting-a-r-markdown-html-file-on-a-github-page
- 
-https://simonejdemyr.com/r-tutorials/statistics/tutorial8.html
+# Conclusão
 
-https://www.youtube.com/watch?v=uMJeojTOcxc&ab_channel=CanaldaQuaest
+- A diferença que observamos ao analisar apenas as médias inicialmente leva a uma conclusão equivocada.
 
-https://rpubs.com/metricsdawg/1037525
+- Se comparássemos apenas as médias entre os tipos de escola, diríamos que as médias dos dois tipos de escolas são iguais para os alunos.
 
-https://simonejdemyr.com/r-tutorials/statistics/tutorial8.html
+- No entanto, ao realizarmos o pareamento — uma técnica para dados observacionais que segue uma lógica quase experimental — e compararmos dois grupos muito semelhantes, o resultado se revela diferente.
 
-https://rstudio-pubs-static.s3.amazonaws.com/760267_c7258119d9d54c609d332574c46f778a.html
+- Na verdade, alunos de escolas não católicas que têm trajetórias de vida semelhantes às dos alunos de escolas católicas apresentam resultados melhores, em média, nas notas de matemática.
 
-https://fairyonice.github.io/Gentle-Hands-on-Introduction-to-Observational-Study.html
+---
 
-https://rstudio-pubs-static.s3.amazonaws.com/760452_8c868e5f80f046d2a5d0e66450564c2c.html
+# Referências
 
-https://rpubs.com/ph7see/827070
+**R Tutorial 8: Propensity Score Matching**: https://simonejdemyr.com/r-tutorials/statistics/tutorial8.html
+
+**Avaliação de politícas públicas B**: https://www.youtube.com/watch?v=uMJeojTOcxc&ab_channel=CanaldaQuaest
+
+**HW11a - The Lost Homework on PSM and LASSO**: https://rpubs.com/metricsdawg/1037525
 
 

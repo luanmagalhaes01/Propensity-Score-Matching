@@ -1,0 +1,7 @@
+"0",""
+"0","ecls %>%"
+"0","  group_by(catholic) %>%"
+"0","  summarise(n_students = n(),"
+"0","            mean_math = mean(c5r2mtsc_std),"
+"0","            std_error = sd(c5r2mtsc_std) / sqrt(n_students)) %>%"
+"0","  kable()"
