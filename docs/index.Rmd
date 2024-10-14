@@ -593,4 +593,3 @@ Esse resultado indica que **a escola tem uma diferença em relação aos alunos*
 
 **HW11a - The Lost Homework on PSM and LASSO**: https://rpubs.com/metricsdawg/1037525
 
-
