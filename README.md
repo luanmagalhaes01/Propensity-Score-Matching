@@ -1,10 +1,10 @@
 # Propensity Score Matching
 
-Neste projeto, analisei o efeito de frequentar uma escola católica, em comparação com escolas não católicas, no desempenho de matematica dos alunos.
+Neste projeto, analisei o efeito de frequentar uma escola católica, em comparação com escolas não católicas, no desempenho de matemática dos alunos.
 
-Como os estudantes de escolas católicas geralmente possuem perfis diferentes, utilizei o Propensity Score Matching (PSM) para obter estimativas causais mais confiáveis. O PSM equilibra as características dos grupos de tratamento e controle, tornando-os mais semelhantes e facilitando a comparação.
+Como os estudantes de escolas católicas geralmente possuem perfis diferentes, utilizei o *Propensity Score Matching (PSM)* para obter estimativas causais mais confiáveis. O PSM equilibra as características dos grupos de tratamento e controle, tornando-os mais semelhantes e facilitando a comparação.
 
-Se analisássemos apenas as médias, poderíamos concluir erroneamente que não há diferença entre os alunos de escolas católicas e não católicas. Contudo, após aplicar o Propensity Score Matching e equilibrar as características dos grupos, ficou evidente que os alunos de escolas não católicas, com trajetórias de vida semelhantes, apresentam melhores resultados em matemática.
+Se analisássemos apenas as médias, poderíamos concluir erroneamente que não há diferença entre os alunos de escolas católicas e não católicas. Contudo, após aplicar o *Propensity Score Matching* e equilibrar as características dos grupos, ficou evidente que os alunos de escolas não católicas, com trajetórias de vida semelhantes, apresentam melhores resultados em matemática.
 
 Apesar de algumas limitações, como a dependência de variáveis observáveis e a redução do tamanho da amostra, essa técnica é eficaz para aumentar a validade interna dos estudos.
 
