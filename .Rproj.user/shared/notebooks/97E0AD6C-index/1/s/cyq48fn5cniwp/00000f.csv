@@ -1,8 +1,0 @@
-"0",""
-"0","# Ajusta um modelo de regressão logística para a variável dependente 'catholic'"
-"0","m_ps <- glm(catholic ~ race_white + w3income_1k + p5hmage + p5numpla + w3momed_hsb,"
-"0","            family = binomial(), # Define a família binomial para regressão logística"
-"0","            data=ecls) # Utiliza o dataframe 'ecls'"
-"0",""
-"0","# Gera uma tabela com os coeficientes do modelo usando a função kable"
-"0","kable(summary(m_ps)$coefficients)"

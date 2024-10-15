@@ -64,8 +64,19 @@ top:1em;right:1em;
 })()</script>
 </div>
 
+## Introdução
 
-# Introdução
+Na ciência de dados, um dos grandes desafios é entender a **relação causal** entre variáveis. Quando não podemos realizar experimentos aleatórios por razões éticas, financeiras ou logísticas, os pesquisadores frequentemente usam **estudos observacionais**.
+
+No entanto, esses estudos nem sempre garantem que os grupos comparados sejam equivalentes, o que pode gerar vieses e dificultar a interpretação dos resultados.
+
+Para superar esse desafio, usamos técnicas de inferência causal, que ajudam a identificar o impacto real de uma variável (tratamento) em meio a possíveis influências externas.
+
+Neste projeto, aplicaremos uma técnica chamada *Propensity Score Matching*, que busca equilibrar as características dos grupos de tratamento e controle, tornando-os mais semelhantes e, assim, facilitando a comparação.
+
+---
+
+## Contexto do Problema
 
 Neste trabalho, analisaremos o efeito de frequentar uma escola católica, em comparação com escolas não católicas, no desempenho dos alunos.
 
@@ -81,13 +92,15 @@ Como os estudantes de escolas católicas geralmente têm perfis diferentes dos d
 
 ---
 
-# Propensity Score Matching
+## Propensity Score Matching
 
-*Propensity Score Matching* (PSM) é uma técnica estatística usada em estudos observacionais para reduzir o viés de seleção ao estimar o efeito de uma intervenção.
+*Propensity Score Matching* (PSM) é uma técnica estatística usada reduzir o viés de seleção em estudos observacionais, onde os grupos de tratamento e controle não são formados de maneira aleatória.
 
-Ela calcula a probabilidade de um indivíduo receber um tratamento com base em características observáveis e, em seguida, faz o pareamento entre quem recebeu e quem não recebeu o tratamento, mas possui scores semelhantes.
+O PSM usa um modelo probabilístico (geralmente uma **regressão logística**) para estimar a **probabilidade de um indivíduo receber o tratamento** com base em várias covariáveis.
 
-Isso permite uma comparação mais equilibrada, simulando um experimento controlado.
+Esse escore de propensão é, então, utilizado para parear indivíduos do grupo de tratamento com indivíduos do grupo de controle que possuem escores semelhantes, formando pares de observações comparáveis.
+
+O resultado é uma estimativa do efeito causal que é mais confiável e precisa do que uma simples comparação de médias entre os grupos.
 
 Embora o PSM dependa de variáveis observáveis e possa reduzir o tamanho da amostra, é uma ferramenta eficaz para aumentar a validade interna dos estudos.
 
@@ -266,8 +279,6 @@ ecls %&gt;%
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;br&gt;
-
 - *race_white*: **A proporção de alunos brancos é maior em escolas católicas** (76.67%) do que em não católicas (65.37%). Isso sugere uma maior concentração de alunos brancos em escolas católicas, o que pode estar relacionado com fatores históricos, sociais ou econômicos.  
 
 ---
@@ -314,7 +325,7 @@ O que o teste t faz:
 
 ---
 
-### Teste t - Média de matemática
+## Teste t - Média de matemática
 
 
 ```r
@@ -335,15 +346,13 @@ with(ecls, t.test(c5r2mtsc_std ~ catholic))
 ##       0.1631279       0.2196851
 ```
 
-&lt;br&gt;
-
 - **A diferença nas notas de matemática** entre alunos de escolas católicas (0,22) e não católicas (0,16) é pequena, e o teste t rejeita a hipótese de médias iguais apenas ao nível de significância de 10%, mas não ao de 5%.
 
 - Isso sugere que a diferença **não é estatisticamente significativa** em um nível mais rigoroso, o que impede de afirmar com certeza que estudar em escola católica melhora o desempenho em matemática, já que a correlação pode ser casual mesmo considerando outros fatores.
 
 ---
 
-### Teste t - Raça
+## Teste t - Raça
 
 
 ```r
@@ -364,15 +373,13 @@ with(ecls, t.test(race_white ~ catholic)) # Raça branca
 ##       0.6537008       0.7666667
 ```
 
-&lt;br&gt;
-
 - A análise mostra que a proporção de alunos brancos é significativamente maior em escolas católicas (76,67%) do que em não católicas (65,37%), com um p-valor extremamente baixo que permite rejeitar a hipótese de não haver diferença.
 
 - Assim, ser branco está estatisticamente associado a estudar em uma escola católica.
 
 ---
 
-### Teste t - Idade da mãe
+## Teste t - Idade da mãe
 
 
 ```r
@@ -393,15 +400,13 @@ with(ecls, t.test(p5hmage ~ catholic)) # Idade da mae
 ##        37.79462        39.77527
 ```
 
-&lt;br&gt;
-
 - A análise revela que a idade média das mães de alunos em escolas católicas (39,78 anos) é significativamente maior do que a das mães de alunos de escolas não católicas (37,79 anos), com um p-valor extremamente baixo (2.2e-16).
 
 - Isso permite rejeitar a hipótese de que não há diferença, concluindo que as mães de alunos em escolas católicas são, em média, mais velhas de forma estatisticamente significativa.
 
 ---
 
-### Teste t - Renda familiar (em milhares)
+## Teste t - Renda familiar (em milhares)
 
 
 ```r
@@ -422,15 +427,13 @@ with(ecls, t.test(w3income_1k ~ catholic)) # Renda familiar
 ##        65.39393        86.18063
 ```
 
-&lt;br&gt;
-
 - A análise mostra que a renda familiar média dos alunos em escolas católicas (86.180,63) é significativamente maior que a dos alunos em escolas não católicas (65.393,93). Com uma estatística t de -13,24, o teste t indica que essa diferença é estatisticamente significativa, tornando improvável que seja devida ao acaso.
 
 - Assim, frequentar uma escola católica está associado a uma renda familiar significativamente mais alta.
 
 ---
 
-### Teste t - Quantidade de lugares em que alunos moraram
+## Teste t - Quantidade de lugares em que alunos moraram
 
 
 ```r
@@ -451,15 +454,13 @@ with(ecls, t.test(p5numpla ~ catholic)) # Quantidade de lugares em que alunos mo
 ##        1.106246        1.073118
 ```
 
-&lt;br&gt;
-
 - A análise mostra que os alunos de escolas não católicas viveram, em média, em mais lugares (1,11) do que os alunos de escolas católicas (1,07). Com uma estatística t de 3,13, essa diferença é estatisticamente significativa, sugerindo que os alunos de escolas católicas tendem a ter vivido em menos lugares.
 
 - Portanto, há uma diferença significativa no número de lugares onde os alunos viveram, com os de escolas não católicas tendo maior mobilidade.
 
 ---
 
-### Teste t - Escolaridade da mãe até ensino médio (w3momed_hsb)
+## Teste t - Escolaridade da mãe até ensino médio (w3momed_hsb)
 
 
 ```r
@@ -480,8 +481,6 @@ with(ecls, t.test(w3momed_hsb ~ catholic)) # Escolaridade da mae
 ##       0.3923094       0.2053763
 ```
 
-&lt;br&gt;
-
 - A análise mostra que a proporção de mães com escolaridade até o ensino médio é maior entre alunos de escolas não católicas (39,23%) em comparação com escolas católicas (20,54%). Com uma estatística t de 12,36, a diferença é estatisticamente significativa, sugerindo que não é devida ao acaso.
 
 - Portanto, a escolaridade das mães de alunos de escolas católicas é significativamente mais alta, indicando uma menor proporção de mães com escolaridade até o ensino médio nesse grupo.
@@ -492,11 +491,13 @@ with(ecls, t.test(w3momed_hsb ~ catholic)) # Escolaridade da mae
 
 Significa que simplesmente comparar a média de notas de alunos de escolas católicas com alunos de escolas não católicas não é uma abordagem adequada, pois **o contexto e o background desses alunos são diferentes**.
 
-Para abordar essa questão, utilizaremos a estimativa de *propensity score*. Essa técnica nos permitirá criar um contrafactual, buscando entre todos os alunos que não frequentam escolas católicas aqueles que mais se assemelham ao perfil dos alunos de escolas católicas. Dessa forma, poderemos realizar comparações mais justas e precisas.
+Para abordar essa questão, utilizaremos a estimativa de *propensity score*. Essa técnica nos permitirá criar um contrafactual, buscando entre todos os alunos que não frequentam escolas católicas aqueles que mais se assemelham ao perfil dos alunos de escolas católicas.
+
+Dessa forma, poderemos realizar comparações mais justas e precisas.
 
 ---
 
-## Propensity score estimation
+## Estimativa do Propensity Score
 
 Na prática, o processo de Propensity Score Matching geralmente envolve os seguintes passos:
 
@@ -518,19 +519,17 @@ Para que o matching forneça uma estimativa causal confiável, é necessário in
 
 ---
 
-### Modelagem do Propensity Score - Regressão logística
+## Estimativa do Propensity Score - Regressão logística
 
 Queremos calcular um propensity score individual que nos forneça a probabilidade de um aluno ser ou não de escola católica, levando em consideração variáveis como raça, renda, idade da mãe e o número de lugares onde a pessoa morou.
 
 
 ```r
-# Ajusta um modelo de regressão logística para a variável dependente 'catholic'
 m_ps &lt;- glm(catholic ~ race_white + w3income_1k + p5hmage + p5numpla + w3momed_hsb,
-            family = binomial(), # Define a família binomial para regressão logística
-            data=ecls) # Utiliza o dataframe 'ecls'
+            family = binomial(), 
+            data=ecls) # modelo de regressão logística
 
-# Gera uma tabela com os coeficientes do modelo usando a função kable
-kable(summary(m_ps)$coefficients)
+kable(summary(m_ps)$coefficients) # tabela com os coeficientes do modelo
 ```
 
 &lt;table&gt;
@@ -591,9 +590,7 @@ kable(summary(m_ps)$coefficients)
 
 ---
 
-### Modelagem do Propensity Score - Regressão logística
-
-A regressão logística realizada indica que várias variáveis influenciam significativamente a probabilidade de um aluno frequentar uma escola católica.
+## Modelagem do Propensity Score - Regressão logística
 
 - A raça do aluno (`race_white`) é significativa, sugerindo que alunos brancos têm uma maior probabilidade de estar em escolas católicas.
 
@@ -607,7 +604,7 @@ A regressão logística realizada indica que várias variáveis influenciam sign
 
 ---
 
-### Examinando área de suporte comum
+## Visualização dos Propensity Scores
 
 A área de comum suporte é a faixa de valores dos *propensity scores* onde há sobreposição entre os grupos de tratamento e controle. Indivíduos fora dessa área são excluídos da análise, pois não possuem comparações adequadas no outro grupo, garantindo que apenas aqueles dentro dessa área possam ser comparados de forma válida para estimar o efeito do tratamento.
 
@@ -615,9 +612,7 @@ A área de comum suporte é a faixa de valores dos *propensity scores* onde há 
 
 ---
 
-### Matching
-
-#### Modelagem
+## Aplicação do Matching
 
 O objetivo do matching é equilibrar as características entre os dois grupos para tornar a comparação mais justa, como em um experimento randomizado.
 
@@ -638,9 +633,9 @@ dta_m &lt;- match.data(mod_match) # Nova base criada a partir do matching
 
 ---
 
-### Matching
+## Aplicação do Matching
 
-#### Base após matching
+### Base após matching
 
 Inicialmente, havia 930 indivíduos tratados e 4.499 no controle. Após o pareamento, todos os 930 tratados foram pareados com 930 controles, resultando em 3.569 controles que não tinham contrapartida no grupo de tratamento e foram descartados
 
@@ -695,9 +690,9 @@ kable(resumo_mod_match$nn)
 
 ---
 
-### Matching
+## Aplicação do Matching
 
-#### Média das variáveis
+### Balanceamento das Covariáveis
 
 Após o pareamento, as **diferenças** entre os grupos de tratamento e controle foram **drasticamente reduzidas**, o que poderia enviesar a estimativa do efeito do tratamento se essas diferenças não fossem ajustadas.
 
@@ -743,14 +738,11 @@ kable()
 
 ---
 
-### Matching
-
-#### Teste t
+## Análise de Resultados
 
 - No início, ao realizar o teste t comparando as variáveis, todas apresentaram p-valor menor que 0,05.
 
 - Após o pareamento, no entanto, não rejeitamos a hipótese nula, o que significa que, em relação a essas variáveis, o grupo de controle e o de tratamento são estatisticamente iguais.
-
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -803,10 +795,9 @@ kable()
 
 ---
 
-### Efeitos do tratamento
+## Análise de Resultados
 
 Com os dados pareados, é simples calcular os efeitos do tratamento. Uma opção é usar o **teste t**.
-
 
 
 ```r
@@ -831,10 +822,9 @@ with(dta_m, t.test(c5r2mtsc_std ~ catholic))
 
 - Em média, os alunos não católicos têm notas significativamente maiores do que os alunos católicos.
 
-
 ---
 
-### Efeitos do tratamento
+## Análise de Resultados
 
 Uma outra maneira de analisar é usar uma regressão linear da variável de interesse, que é a média de matemática, em relação ao tipo de escola:
 
@@ -866,13 +856,11 @@ Uma outra maneira de analisar é usar uma regressão linear da variável de inte
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;br&gt;
-
 * Em média, ser aluno de uma escola católica está associado a uma redução de 0.18387 nas notas de matemática, em comparação com alunos de escolas não católicas. O sinal negativo mostra que, após ajustar para a variável, os alunos de escolas católicas tendem a ter desempenho inferior.
 
 ---
 
-### Efeitos do tratamento
+## Análise de Resultados
 
 Para sofisticar um pouco mais o modelo, além de incluir apenas a variável católica, podemos controlar pelas demais variáveis para verificar se obtemos estimativas mais eficientes:
 
@@ -943,8 +931,7 @@ Para sofisticar um pouco mais o modelo, além de incluir apenas a variável cat�
 
 ---
 
-### Efeitos do tratamento
-
+## Análise de Resultados
 
 Mesmo controlando todos os atributos de trajetórias que parecem relevantes, ainda assim **encontramos médias de desempenho em matemática diferentes**.
 
@@ -952,7 +939,7 @@ Esse resultado indica que **a escola tem uma diferença em relação aos alunos*
  
 ---
 
-# Conclusão
+## Conclusão
 
 - A diferença que observamos ao analisar apenas as médias inicialmente leva a uma conclusão equivocada.
 
@@ -964,14 +951,13 @@ Esse resultado indica que **a escola tem uma diferença em relação aos alunos*
 
 ---
 
-# Referências
+## Referências
 
 **R Tutorial 8: Propensity Score Matching**: https://simonejdemyr.com/r-tutorials/statistics/tutorial8.html
 
 **Avaliação de politícas públicas B**: https://www.youtube.com/watch?v=uMJeojTOcxc&amp;ab_channel=CanaldaQuaest
 
 **HW11a - The Lost Homework on PSM and LASSO**: https://rpubs.com/metricsdawg/1037525
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

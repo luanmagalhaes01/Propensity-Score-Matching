@@ -1,4 +1,0 @@
-"0",""
-"0","resumo_mod_match <- summary(mod_match)"
-"0",""
-"0","kable(resumo_mod_match$nn)"

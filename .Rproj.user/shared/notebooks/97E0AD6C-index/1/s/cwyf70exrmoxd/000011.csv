@@ -1,6 +1,0 @@
-"0",""
-"0","dta_m %>%"
-"0","group_by(catholic) %>%"
-"0","select(one_of(ecls_cov)) %>%"
-"0","summarise_all(funs(mean)) %>%"
-"0","kable()"
