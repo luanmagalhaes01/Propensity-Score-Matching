@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./capa.png" alt="Logo do projeto" width="300">
+  <img src="./capa.png" alt="Logo do projeto" width="600">
 </p>
 
 
