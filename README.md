@@ -1,3 +1,5 @@
+<img src="/capa.png">
+
 # Propensity Score Matching
 
 Neste projeto, analisei o efeito de frequentar uma escola católica, em comparação com escolas não católicas, no desempenho de matemática dos alunos.
