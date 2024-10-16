@@ -1,4 +1,7 @@
-<img src="./capa.png" alt="Logo do projeto" width="300">
+<p align="center">
+  <img src="./capa.png" alt="Logo do projeto" width="300">
+</p>
+
 
 # Propensity Score Matching
 
