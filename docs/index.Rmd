@@ -1,6 +1,6 @@
 ---
 title: "Propensity Score Matching"
-institute: "Luan Magalhães"
+#institute: "Luan Magalhães"
 #date: "`r format(Sys.time(), '%d/%m/%Y')`"
 output:
   xaringan::moon_reader:
@@ -74,17 +74,17 @@ Embora o PSM dependa de variáveis observáveis e possa reduzir o tamanho da amo
 
 ## Variáveis utilizadas
 
-**catholic**: Se a escola é católica (1) ou não;    
+**catholic**: Se a escola é católica (1) ou não (0);    
 
-**c5r2mtsc_std**: Notas padronizadas de matemática   
+**c5r2mtsc_std**: Notas padronizadas de matemática;   
 
-**p5hmage**: idade da mãe
+**p5hmage**: idade da mãe;
 
 **race_white**: se aluno é da raça branca (1) ou não (0);
 
-**w3income_1k**: Renda familiar em milhares   
+**w3income_1k**: Renda familiar (em milhares);   
 
-**p5numpla**: Número de lugares onde o aluno viveu por pelo menos 4 meses   
+**p5numpla**: Número de lugares onde o aluno viveu por pelo menos 4 meses;   
 
 **w3momed_hsb**: O nível de educação da mãe é ensino médio ou menos (1) ou algum nível universitário ou superior (0)?
 
