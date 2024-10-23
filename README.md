@@ -20,4 +20,4 @@ Estatísticas utilizadas
 -   Regressão linear simples
 -   Teste t
 
-**🚀Você pode conferir a análise completa no link**: [Clique aqui](https://luanmagalhaes01.github.io/Propensity-Score-Matching/#1)
+🚀Você pode conferir a análise completa no [Rmarkdown aqui](https://luanmagalhaes01.github.io/Propensity-Score-Matching/#1)
