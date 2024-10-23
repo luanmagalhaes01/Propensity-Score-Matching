@@ -1,76 +1,62 @@
 ---
-title: "Propensity Score Matching"
-#institute: "Luan Magalhães"
+title: "Análise do efeito de escolas católicas no desempenho dos alunos usando Propensity Score Matching"
+author: ""
 #date: "`r format(Sys.time(), '%d/%m/%Y')`"
 output:
-  xaringan::moon_reader:
-    lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
-      widescreen: true  # Use true para 16:9
-      ratio: 16:9
-    slide_level: 2
-    #css: ["white.css"]  # Adicione este arquivo CSS para a capa branca
+    html_document:
+       highlight: textmate
+       theme: united
+       number_sections: yes
+       toc: yes
+       toc_float:
+         collapsed: yes
+         smooth_scroll: no
+       code_folding: hide
 ---
 
-<style>
-body {
-  font-family: "Manrope", sans-serif;
-}
-</style>
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Introdução
 
-```{r use-logo, echo=FALSE}
-xaringanExtra::use_logo("logo.png")
-```
+Na ciência de dados, um dos grandes desafios é entender a *relação causal* entre variáveis. Em muitos casos, não podemos realizar experimentos controlados devido a limitações éticas, financeiras ou logísticas. Por isso, os pesquisadores utilizam estudos observacionais, que, embora úteis, nem sempre garantem a equivalência entre os grupos comparados, podendo introduzir vieses que dificultam a interpretação dos resultados.
 
-## Introdução
-
-Na ciência de dados, um dos grandes desafios é entender a **relação causal** entre variáveis. Quando não podemos realizar experimentos aleatórios por razões éticas, financeiras ou logísticas, os pesquisadores frequentemente usam **estudos observacionais**.
-
-No entanto, esses estudos nem sempre garantem que os grupos comparados sejam equivalentes, o que pode gerar vieses e dificultar a interpretação dos resultados.
-
-Para superar esse desafio, usamos técnicas de inferência causal, que ajudam a identificar o impacto real de uma variável (tratamento) em meio a possíveis influências externas.
-
-Neste projeto, aplicaremos uma técnica chamada *Propensity Score Matching*, que busca equilibrar as características dos grupos de tratamento e controle, tornando-os mais semelhantes e, assim, facilitando a comparação.
+Para superar esse desafio, aplicamos técnicas de *inferência causal*, que permitem estimar o impacto de uma variável (o tratamento) controlando possíveis influências externas. Neste projeto, utilizamos o Propensity Score Matching (PSM) para tentar equilibrar as características dos grupos de tratamento e controle, facilitando a comparação e tornando a análise mais robusta.
 
 ---
 
-## Contexto do Problema
+# Objetivo
 
-Neste trabalho, analisaremos o efeito de frequentar uma escola católica, em comparação com escolas não católicas, no desempenho dos alunos.
-
-Como os estudantes de escolas católicas geralmente têm perfis diferentes dos de escolas não católicas, utilizaremos o pareamento por escore de propensão para obter estimativas causais mais confiáveis.
-
---
-
-- **A pergunta que surge é**: a diferença no desempenho é causada pelas escolas ou pelas trajetórias de vida dos alunos, que os colocam em situações de desigualdade?
-
---
-
-- Em outras palavras, a escola é a responsável pela desigualdade ou é a história de vida dos alunos que gera essa disparidade?
+O objetivo deste estudo é analisar o efeito de frequentar uma escola católica no desempenho acadêmico dos alunos, em comparação com aqueles que frequentam escolas não católicas. Ao usar o Propensity Score Matching, buscamos obter estimativas mais confiáveis, controlando fatores que possam influenciar o desempenho acadêmico, como renda familiar, raça, e nível de educação dos pais.
 
 ---
+
+# Contexto do Problema
+
+Frequentar uma escola católica pode ter impactos diferentes no desempenho dos alunos em relação a escolas não católicas. Entretanto, os alunos que frequentam escolas católicas tendem a ter perfis socioeconômicos diferentes daqueles que frequentam outras instituições, o que pode gerar um viés na análise.
+
+**Pergunta de Pesquisa**: A diferença de desempenho entre alunos de escolas católicas e não católicas é causada pela instituição de ensino ou por características pré-existentes dos alunos, como seu histórico familiar e socioeconômico?
+
+
+Esse estudo busca esclarecer se o desempenho acadêmico dos alunos é fortemente influenciado pela escola que frequentam ou se é resultado de desigualdades que eles já trazem consigo.
+
+---
+
+#  Metodologia
 
 ## Propensity Score Matching
 
-*Propensity Score Matching* (PSM) é uma técnica estatística usada reduzir o viés de seleção em estudos observacionais, onde os grupos de tratamento e controle não são formados de maneira aleatória.
+O Propensity Score Matching é uma técnica que visa reduzir o viés de seleção em estudos observacionais. Quando os grupos de tratamento e controle não são formados aleatoriamente, é possível que as diferenças nos resultados sejam influenciadas por características externas. O PSM busca equilibrar essas características entre os grupos.
 
-O PSM usa um modelo probabilístico (geralmente uma **regressão logística**) para estimar a **probabilidade de um indivíduo receber o tratamento** com base em várias covariáveis.
+- **Modelo de Probabilidade**: O escore de propensão é calculado por meio de uma regressão logística, onde a variável dependente é a probabilidade de o aluno frequentar uma escola católica. As variáveis independentes incluem fatores como idade da mãe, renda familiar e raça.
 
-Esse escore de propensão é, então, utilizado para parear indivíduos do grupo de tratamento com indivíduos do grupo de controle que possuem escores semelhantes, formando pares de observações comparáveis.
-
-O resultado é uma estimativa do efeito causal que é mais confiável e precisa do que uma simples comparação de médias entre os grupos.
-
-Embora o PSM dependa de variáveis observáveis e possa reduzir o tamanho da amostra, é uma ferramenta eficaz para aumentar a validade interna dos estudos.
+- **Pareamento**: Após calcular os escores de propensão, pareamos os alunos de escolas católicas com aqueles de escolas não católicas que possuem escores semelhantes, formando pares comparáveis. Isso nos permite realizar uma comparação mais justa entre os grupos.
 
 ---
+
+# Tratamento dos dados
 
 ## Variáveis utilizadas
 
@@ -88,9 +74,10 @@ Embora o PSM dependa de variáveis observáveis e possa reduzir o tamanho da amo
 
 **w3momed_hsb**: O nível de educação da mãe é ensino médio ou menos (1) ou algum nível universitário ou superior (0)?
 
----
 
-## Lendo dados
+## Leitura da Base de Dados
+
+A base de dados `ecls` foi carregada e preparada para análise. A variável de interesse é a nota padronizada de matemática (c5r2mtsc_std), enquanto as demais variáveis servem como controles no cálculo do escore de propensão.
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -98,6 +85,7 @@ library(kableExtra)  # Formatação de tabelas
 library(MatchIt)     # Matching de dados em análises de causalidade
 library(tidyverse)   # manipulação de dados
 library(readr)       # usado para ler arquivos CSV
+library(gt)
 
 # Lê o arquivo CSV e armazena no dataframe 'ecls'
 ecls <- read_csv("ecls.csv")  
@@ -107,15 +95,15 @@ ecls <- ecls %>%
   select('catholic', 'c5r2mtsc_std', 'p5hmage',
          'race_white','w3income_1k', 'p5numpla', 'w3momed_hsb')
 
-ecls %>% head(2) %>% kable() # Exibe as duas primeiras linhas 
+ecls %>% head(2) %>% gt() # Exibe as duas primeiras linhas 
 
 ```
 
----
+# Análise e Resultados
 
-## Análise descritiva
+## Média das variáveis
 
-### Média de matemática
+### Matemática
 
 • As notas nos testes de **c5r2mtsc_std** (média padronizada de matemática, utilizando a padronização z) diferem, em média, entre alunos de escolas católicas e não católicas?
 
@@ -125,26 +113,13 @@ ecls %>%
   group_by(catholic) %>%
   summarise(n_students = n(),
             mean_math = mean(c5r2mtsc_std),
-            std_error = sd(c5r2mtsc_std) / sqrt(n_students)) %>%
-  kable()
+            std_error = sd(c5r2mtsc_std) / sqrt(n_students)) %>% gt()
 
 ```
 
----
+- A **média** das notas padronizadas de matemática é **maior** para alunos de **escolas católicas** (0.2197) do que para alunos de escolas não católicas (0.1631). No entanto, a significância dessa diferença ainda precisa ser verificada.
 
-## Análise descritiva
-
-### Média de matemática
-
-- A **média** das notas padronizadas de matemática é **maior** para alunos de **escolas católicas** (0.2197) do que para alunos de escolas não católicas (0.1631).
-
-- A diferença de médias (0.2197 - 0.1631 = 0.0566) sugere que, em média, alunos de escolas católicas apresentam um desempenho levemente superior em matemática; no entanto, a significância dessa diferença ainda precisa ser verificada.
-
----
-
-## Análise descritiva
-
-### Média das variáveis
+### Demais variáveis
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -153,17 +128,13 @@ ecls_cov <-c('race_white','p5hmage','w3income_1k','p5numpla','w3momed_hsb')
 ecls %>%
   group_by(catholic) %>%
   select(one_of(ecls_cov)) %>% 
-  summarise_all(funs(mean(.,na.rm = T))) %>% kable()
+  summarise_all(funs(mean(.,na.rm = T))) %>% gt()
 
 ```
 
+<br>
+
 - *race_white*: **A proporção de alunos brancos é maior em escolas católicas** (76.67%) do que em não católicas (65.37%). Isso sugere uma maior concentração de alunos brancos em escolas católicas, o que pode estar relacionado com fatores históricos, sociais ou econômicos.  
-
----
-
-## Análise descritiva
-
-### Média das variáveis
 
 - *Idade da mãe*: As mães de alunos em escolas católicas são um pouco mais velhas (39.78 anos) do que em escolas não católicas (37.79 anos), o que pode refletir diferenças socioeconômicas.
 
@@ -173,19 +144,14 @@ ecls %>%
 
 - *Escolaridade da mãe*: Mais mães em escolas católicas têm escolaridade superior ao ensino médio (79.46%) em comparação com escolas não católicas (60.77%).
 
----
 
-## Análise descritiva
+Essas variáveis apontam para um perfil mais privilegiado dos alunos de escolas católicas em comparação com os de escolas não católicas.
 
-### Média das variáveis
+Alunos de escolas católicas, em geral, têm maior probabilidade de serem brancos, terem mães mais velhas e com maior escolaridade, além de virem de famílias com rendas mais altas.
 
-- Essas variáveis apontam para um perfil mais privilegiado dos alunos de escolas católicas em comparação com os de escolas não católicas.
+Esses fatores podem contribuir para o desempenho acadêmico superior observado nos testes de matemática, embora seja necessário um estudo mais aprofundado para confirmar essas relações e evitar conclusões simplistas.
 
-- Alunos de escolas católicas, em geral, têm maior probabilidade de serem brancos, terem mães mais velhas e com maior escolaridade, além de virem de famílias com rendas mais altas.
-
-- Esses fatores podem contribuir para o desempenho acadêmico superior observado nos testes de matemática, embora seja necessário um estudo mais aprofundado para confirmar essas relações e evitar conclusões simplistas.
-
----
+--- 
 
 ## Teste t
 
@@ -201,9 +167,7 @@ O que o teste t faz:
   
   - Caso contrário, não há evidências suficientes para rejeitar a hipótese nula.
 
----
-
-## Teste t - Média de matemática
+### Média de matemática
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -215,9 +179,7 @@ with(ecls, t.test(c5r2mtsc_std ~ catholic))
 
 - Isso sugere que a diferença **não é estatisticamente significativa** em um nível mais rigoroso, o que impede de afirmar com certeza que estudar em escola católica melhora o desempenho em matemática, já que a correlação pode ser casual mesmo considerando outros fatores.
 
----
-
-## Teste t - Raça
+### Raça
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -229,9 +191,7 @@ with(ecls, t.test(race_white ~ catholic)) # Raça branca
 
 - Assim, ser branco está estatisticamente associado a estudar em uma escola católica.
 
----
-
-## Teste t - Idade da mãe
+### Idade da mãe
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -243,9 +203,7 @@ with(ecls, t.test(p5hmage ~ catholic)) # Idade da mae
 
 - Isso permite rejeitar a hipótese de que não há diferença, concluindo que as mães de alunos em escolas católicas são, em média, mais velhas de forma estatisticamente significativa.
 
----
-
-## Teste t - Renda familiar (em milhares)
+### Renda familiar (em milhares)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -257,9 +215,7 @@ with(ecls, t.test(w3income_1k ~ catholic)) # Renda familiar
 
 - Assim, frequentar uma escola católica está associado a uma renda familiar significativamente mais alta.
 
----
-
-## Teste t - Quantidade de lugares em que alunos moraram
+### Quantidade de lugares em que alunos moraram
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -271,9 +227,7 @@ with(ecls, t.test(p5numpla ~ catholic)) # Quantidade de lugares em que alunos mo
 
 - Portanto, há uma diferença significativa no número de lugares onde os alunos viveram, com os de escolas não católicas tendo maior mobilidade.
 
----
-
-## Teste t - Escolaridade da mãe até ensino médio (w3momed_hsb)
+### Escolaridade da mãe até ensino médio (w3momed_hsb)
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 
@@ -285,8 +239,6 @@ with(ecls, t.test(w3momed_hsb ~ catholic)) # Escolaridade da mae
 
 - Portanto, a escolaridade das mães de alunos de escolas católicas é significativamente mais alta, indicando uma menor proporção de mães com escolaridade até o ensino médio nesse grupo.
 
----
-
 ## O que isso significa? 
 
 Significa que simplesmente comparar a média de notas de alunos de escolas católicas com alunos de escolas não católicas não é uma abordagem adequada, pois **o contexto e o background desses alunos são diferentes**.
@@ -297,29 +249,17 @@ Dessa forma, poderemos realizar comparações mais justas e precisas.
 
 ---
 
-## Estimativa do Propensity Score
+# Estimativa do Propensity Score
 
 Na prática, o processo de Propensity Score Matching geralmente envolve os seguintes passos:
 
---
-
 **Modelagem do Propensity Score**: Utilizar regressão logística ou outro modelo para calcular a probabilidade de receber o tratamento com base em variáveis observáveis. 
-
---
 
 **Matching**: Parear indivíduos tratados e não tratados com base em seus propensity scores, utilizando métodos como matching por pares, matching com reposição ou matching mais próximo.
 
---
-
 **Análise de Resultados**: Comparar os resultados entre os grupos pareados para avaliar o efeito do tratamento.
 
---
-
-Para que o matching forneça uma estimativa causal confiável, é necessário incluir covariáveis que estejam relacionadas tanto à variável de tratamento quanto aos resultados potenciais.
-
----
-
-## Estimativa do Propensity Score - Regressão logística
+## Regressão logística
 
 Queremos calcular um propensity score individual que nos forneça a probabilidade de um aluno ser ou não de escola católica, levando em consideração variáveis como raça, renda, idade da mãe e o número de lugares onde a pessoa morou.
 
@@ -329,13 +269,11 @@ m_ps <- glm(catholic ~ race_white + w3income_1k + p5hmage + p5numpla + w3momed_h
             family = binomial(), 
             data=ecls) # modelo de regressão logística
 
-kable(summary(m_ps)$coefficients) # tabela com os coeficientes do modelo
+ecls$pr_score<-predict(m_ps,type = "response") 
+
+summary(m_ps)
 
 ```
-
----
-
-## Modelagem do Propensity Score - Regressão logística
 
 - A raça do aluno (`race_white`) é significativa, sugerindo que alunos brancos têm uma maior probabilidade de estar em escolas católicas.
 
@@ -347,16 +285,11 @@ kable(summary(m_ps)$coefficients) # tabela com os coeficientes do modelo
 
 - Finalmente, o nível educacional da mãe (`w3momed_hsb`) mostrou-se significativo, revelando que filhos de mães com ensino médio ou menos têm menor chance de frequentar escolas católicas, comparados a filhos de mães com nível superior.
 
----
-
 ## Visualização dos Propensity Scores
 
 A área de comum suporte é o intervalo de *propensity* scores onde há sobreposição entre os grupos de tratamento e controle. Indivíduos fora dessa área são excluídos da análise, pois não possuem comparações adequadas, garantindo comparações válidas e uma melhor estimativa do efeito do tratamento.
 
-```{r echo=FALSE, fig.align='center', fig.height=5, fig.width=15, message=FALSE, warning=FALSE}
-
-ecls$pr_score<-predict(m_ps,type = "response") 
- 
+```{r echo=TRUE, fig.align='center', fig.height=5, fig.width=15, message=FALSE, warning=FALSE}
 
 # Criar o gráfico com sobreposição de histogramas e eixo x ajustado
 ggplot(ecls, aes(x = pr_score, fill = factor(catholic))) + 
@@ -378,8 +311,6 @@ ggplot(ecls, aes(x = pr_score, fill = factor(catholic))) +
     legend.text = element_text(size = 14)  # Aumenta o tamanho do texto da legenda
   )+
   theme(legend.position = "top") # Coloca a legenda no topo para melhor visualização
-
-
 
 ```
 
@@ -407,51 +338,40 @@ dta_m <- match.data(mod_match) # Nova base criada a partir do matching
 
 ---
 
-## Aplicação do Matching
-
-### Base após matching
+## Base após matching
 
 Inicialmente, havia 930 indivíduos tratados e 4.499 no controle. Após o pareamento, todos os 930 tratados foram pareados com 930 controles, resultando em 3.569 controles que não tinham contrapartida no grupo de tratamento e foram descartados
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 resumo_mod_match <- summary(mod_match)
 
 kable(resumo_mod_match$nn)
 
+
 ```
 
 ---
 
-## Aplicação do Matching
-
-### Balanceamento das Covariáveis
+## Balanceamento das Covariáveis
 
 Após o pareamento, as **diferenças** entre os grupos de tratamento e controle foram **drasticamente reduzidas**, o que poderia enviesar a estimativa do efeito do tratamento se essas diferenças não fossem ajustadas.
 
-<br>
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 dta_m %>%
 group_by(catholic) %>%
 select(one_of(ecls_cov)) %>%
 summarise_all(funs(mean)) %>%
-kable()
+gt()
 
 ```
-
----
-
-## Análise de Resultados
 
 - No início, ao realizar o teste t comparando as variáveis, todas apresentaram p-valor menor que 0,05.
 
 - Após o pareamento, no entanto, não rejeitamos a hipótese nula, o que significa que, em relação a essas variáveis, o grupo de controle e o de tratamento são estatisticamente iguais.
 
-<br>
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 # Executando os testes t para cada variável
 teste_raca_branca <- with(dta_m, t.test(race_white ~ catholic))  # Raça branca
@@ -489,13 +409,15 @@ resultados <- data.frame(
                 teste_escolaridade_mae$statistic))
 
 resultados %>%
-kable()
+gt()
 
 ```
 
 ---
 
-## Análise de Resultados
+## Efeitos do tratamento
+
+### Teste t
 
 Com os dados pareados, é simples calcular os efeitos do tratamento. Uma opção é usar o **teste t**.
 
@@ -509,94 +431,49 @@ with(dta_m, t.test(c5r2mtsc_std ~ catholic))
 
 - Em média, os alunos não católicos têm notas significativamente maiores do que os alunos católicos.
 
----
-
-## Análise de Resultados
+### Regressão linear
 
 Uma outra maneira de analisar é usar uma *regressão linear* da variável de interesse, que é a média de matemática, em relação ao tipo de escola:
 
-<br>
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 lm_treat1 <- lm(c5r2mtsc_std ~ catholic,data=dta_m)
 
-# Extraindo o resumo do modelo
-lm_treat1 <- summary(lm_treat1)
-
-# Criando um dataframe com os coeficientes, erros padrão, t-values e p-values
-summary_lm1 <- data.frame(
-  Term = rownames(lm_treat1$coefficients),  # Nomes das variáveis
-  Estimate = lm_treat1$coefficients[, "Estimate"],  # Estimativa dos coeficientes
-  Std.Error = lm_treat1$coefficients[, "Std. Error"],  # Erro padrão
-  t.value = lm_treat1$coefficients[, "t value"],  # Valores t
-  p.value = lm_treat1$coefficients[, "Pr(>|t|)"]  # Valores p
-)
-
-# Exibindo o dataframe resultante
-kable(summary_lm1, row.names = FALSE)
+summary(lm_treat1)
 
 ```
-
-<br>
 
 * Em média, ser aluno de uma escola católica está associado a uma redução de 0.18387 nas notas de matemática, em comparação com alunos de escolas não católicas.
 
 * O sinal negativo mostra que, após ajustar para a variável, os alunos de escolas católicas tendem a ter desempenho inferior.
 
----
 
-## Análise de Resultados
+### Regressão linear completa
 
 Para sofisticar um pouco mais o modelo, além de incluir apenas a variável católica, podemos controlar pelas demais variáveis para verificar se obtemos estimativas mais eficientes:
 
-<br>
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 lm_treat2 <- lm(c5r2mtsc_std ~ catholic + race_white + w3income_1k + p5hmage + p5numpla + w3momed_hsb,
                 data=dta_m)
 
-# Extraindo o resumo do modelo
-lm_treat2 <- summary(lm_treat2)
-
-# Criando um dataframe com os coeficientes, erros padrão, t-values e p-values
-summary_lm2 <- data.frame(
-  Term = rownames(lm_treat2$coefficients),  # Nomes das variáveis
-  Estimate = lm_treat2$coefficients[, "Estimate"],  # Estimativa dos coeficientes
-  Std.Error = lm_treat2$coefficients[, "Std. Error"],  # Erro padrão
-  t.value = lm_treat2$coefficients[, "t value"],  # Valores t
-  p.value = lm_treat2$coefficients[, "Pr(>|t|)"]  # Valores p
-)
-
-# Exibindo o dataframe resultante
-kable(summary_lm2, row.names = FALSE)
+summary(lm_treat2)
 
 ```
- 
-<br> 
  
 - **O resultado se mantém**: alunos de escolas católicas têm desempenho em matemática pior do que alunos de escolas não católicas quando usamos uma estrutura de pareamento.
 
 ---
 
-## Análise de Resultados
-
-Mesmo controlando todos os atributos de trajetórias que parecem relevantes, ainda assim **encontramos médias de desempenho em matemática diferentes**.
-
-Esse resultado indica que **a escola tem uma diferença em relação aos alunos**; mesmo alunos com backgrounds iguais obtêm resultados diferentes.
- 
----
-
 ## Conclusão
 
-- A diferença que observamos ao analisar apenas as médias inicialmente leva a uma conclusão equivocada.
+Mesmo controlando por atributos relevantes, **ainda encontramos diferenças nas médias de desempenho em matemática**.
 
-- Se comparássemos apenas as médias entre os tipos de escola, diríamos que as médias dos dois tipos de escolas são iguais para os alunos.
+Esse resultado sugere que **o tipo de escola influencia o desempenho**; alunos com perfis semelhantes obtêm resultados diferentes.
 
-- No entanto, ao realizarmos o pareamento — uma técnica para dados observacionais que segue uma lógica quase experimental — e compararmos dois grupos muito semelhantes, o resultado se revela diferente.
-
-- Na verdade, alunos de escolas não católicas que têm trajetórias de vida semelhantes às dos alunos de escolas católicas apresentam resultados melhores, em média, nas notas de matemática.
+- Analisar apenas as médias levaria a uma conclusão incorreta, indicando que não há diferença entre os tipos de escola.
+  
+- No entanto, após o pareamento, comparando grupos muito semelhantes, observamos que **alunos de escolas não católicas** com trajetórias semelhantes aos de escolas católicas têm **melhores resultados em matemática**.
 
 ---
 
