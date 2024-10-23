@@ -138,8 +138,7 @@ ecls &lt;- ecls %&gt;%
   select('catholic', 'c5r2mtsc_std', 'p5hmage',
          'race_white','w3income_1k', 'p5numpla', 'w3momed_hsb')
 
-# Exibe as duas primeiras linhas do dataframe em formato de tabela
-ecls %&gt;% head(2) %&gt;% kable()
+ecls %&gt;% head(2) %&gt;% kable() # Exibe as duas primeiras linhas 
 ```
 
 &lt;table&gt;
@@ -284,13 +283,13 @@ ecls %&gt;%
 
 ### Média das variáveis
 
-- *p5hmage (Idade da mãe)*: A média da **idade das mães em escolas católicas** (39.78 anos) **é** ligeiramente **superior à das mães em escolas não católicas** (37.79 anos). Isso pode refletir um perfil socioeconômico mais elevado ou diferenças nos padrões familiares de planejamento em famílias de alunos que frequentam escolas católicas.
+- *Idade da mãe*: As mães de alunos em escolas católicas são um pouco mais velhas (39.78 anos) do que em escolas não católicas (37.79 anos), o que pode refletir diferenças socioeconômicas.
 
-- *w3income_1k (Renda familiar em milhares)*: A **renda familiar** média é significativamente **maior entre alunos de escolas católicas** (86.180,63 /1000) em comparação com alunos de escolas não católicas (65.393,93 /1000). Esse é um dos fatores que podem influenciar o desempenho acadêmico, já que famílias com maior renda têm mais recursos para investir na educação e no desenvolvimento dos filhos.
+- *Renda familiar*: A renda é significativamente maior em escolas católicas (86.180) do que em escolas não católicas (65.393), influenciando o desempenho escolar.
 
-- *p5numpla (Número de lugares onde o aluno viveu)*: Em média, os alunos de escolas não católicas (1.1062) tendem a ter vivido em um número ligeiramente maior de lugares do que os alunos de escolas católicas (1.0731). A diferença é pequena, mas pode sugerir uma leve maior estabilidade residencial em alunos de escolas católicas.
+- *Número de lugares vividos*: Alunos de escolas não católicas viveram em mais lugares (1.11) do que os de escolas católicas (1.07), indicando uma possível maior estabilidade em escolas católicas.
 
-- *w3momed_hsb (Escolaridade da mãe até ensino médio)*: A proporção de mães com até ensino médio é maior em escolas não católicas (39.23%) do que em escolas católicas (20.54%). Isso sugere que, em média, as mães de alunos de escolas católicas têm níveis de escolaridade mais altos. Esse fator pode estar relacionado a uma maior conscientização sobre a importância da educação ou a melhores condições econômicas, o que também influencia o desempenho acadêmico dos alunos.
+- *Escolaridade da mãe*: Mais mães em escolas católicas têm escolaridade superior ao ensino médio (79.46%) em comparação com escolas não católicas (60.77%).
 
 ---
 
@@ -603,7 +602,7 @@ kable(summary(m_ps)$coefficients) # tabela com os coeficientes do modelo
 
 ## Visualização dos Propensity Scores
 
-A área de comum suporte é a faixa de valores dos *propensity scores* onde há sobreposição entre os grupos de tratamento e controle. Indivíduos fora dessa área são excluídos da análise, pois não possuem comparações adequadas no outro grupo, garantindo que apenas aqueles dentro dessa área possam ser comparados de forma válida para estimar o efeito do tratamento.
+A área de comum suporte é o intervalo de *propensity* scores onde há sobreposição entre os grupos de tratamento e controle. Indivíduos fora dessa área são excluídos da análise, pois não possuem comparações adequadas, garantindo comparações válidas e uma melhor estimativa do efeito do tratamento.
 
 &lt;img src="index_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -635,13 +634,6 @@ dta_m &lt;- match.data(mod_match) # Nova base criada a partir do matching
 ### Base após matching
 
 Inicialmente, havia 930 indivíduos tratados e 4.499 no controle. Após o pareamento, todos os 930 tratados foram pareados com 930 controles, resultando em 3.569 controles que não tinham contrapartida no grupo de tratamento e foram descartados
-
-
-```r
-resumo_mod_match &lt;- summary(mod_match)
-
-kable(resumo_mod_match$nn)
-```
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -693,14 +685,7 @@ kable(resumo_mod_match$nn)
 
 Após o pareamento, as **diferenças** entre os grupos de tratamento e controle foram **drasticamente reduzidas**, o que poderia enviesar a estimativa do efeito do tratamento se essas diferenças não fossem ajustadas.
 
-
-```r
-dta_m %&gt;%
-group_by(catholic) %&gt;%
-select(one_of(ecls_cov)) %&gt;%
-summarise_all(funs(mean)) %&gt;%
-kable()
-```
+&lt;br&gt;
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -740,6 +725,8 @@ kable()
 - No início, ao realizar o teste t comparando as variáveis, todas apresentaram p-valor menor que 0,05.
 
 - Após o pareamento, no entanto, não rejeitamos a hipótese nula, o que significa que, em relação a essas variáveis, o grupo de controle e o de tratamento são estatisticamente iguais.
+
+&lt;br&gt;
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -823,7 +810,9 @@ with(dta_m, t.test(c5r2mtsc_std ~ catholic))
 
 ## Análise de Resultados
 
-Uma outra maneira de analisar é usar uma regressão linear da variável de interesse, que é a média de matemática, em relação ao tipo de escola:
+Uma outra maneira de analisar é usar uma *regressão linear* da variável de interesse, que é a média de matemática, em relação ao tipo de escola:
+
+&lt;br&gt;
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -853,13 +842,19 @@ Uma outra maneira de analisar é usar uma regressão linear da variável de inte
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-* Em média, ser aluno de uma escola católica está associado a uma redução de 0.18387 nas notas de matemática, em comparação com alunos de escolas não católicas. O sinal negativo mostra que, após ajustar para a variável, os alunos de escolas católicas tendem a ter desempenho inferior.
+&lt;br&gt;
+
+* Em média, ser aluno de uma escola católica está associado a uma redução de 0.18387 nas notas de matemática, em comparação com alunos de escolas não católicas.
+
+* O sinal negativo mostra que, após ajustar para a variável, os alunos de escolas católicas tendem a ter desempenho inferior.
 
 ---
 
 ## Análise de Resultados
 
 Para sofisticar um pouco mais o modelo, além de incluir apenas a variável católica, podemos controlar pelas demais variáveis para verificar se obtemos estimativas mais eficientes:
+
+&lt;br&gt;
 
 &lt;table&gt;
  &lt;thead&gt;
@@ -923,6 +918,8 @@ Para sofisticar um pouco mais o modelo, além de incluir apenas a variável cat�
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+ 
+&lt;br&gt; 
  
 - **O resultado se mantém**: alunos de escolas católicas têm desempenho em matemática pior do que alunos de escolas não católicas quando usamos uma estrutura de pareamento.
 
